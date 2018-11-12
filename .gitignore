@@ -3,4 +3,4 @@
 # Ignore packages in the vendor directory.
 # Restore dependencies with:
 # $ govendor sync
-app/vendor/*/
+source/vendor/*/
