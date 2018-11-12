@@ -1,4 +1,7 @@
-.vscode
+/.vscode
+/.idea
+
+.env
 
 # Ignore packages in the vendor directory.
 # Restore dependencies with:
