@@ -1,0 +1,165 @@
+openapi: 3.0.0
+info:
+  title: 'LBH & CoL Directory of Services: Provider Service'
+  description: >-
+    The Provider service contains basic information about a provider in the Directory of Services.
+  version: 1.0.0
+paths:
+  /:
+    get:
+      tags:
+        - metadata
+      responses:
+        '200':
+          description: Returns a list of Tika service resource endpoints
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Resources'
+        default:
+          $ref: '#/components/responses/Error'
+                
+  /versions:
+    get:
+      tags:
+        - metadata
+      operationId: listVersions
+      summary: List API versions
+      responses:
+        200:
+          $ref: '#/components/responses/Versions'
+        default:
+          $ref: '#/components/responses/Error'
+  /health/alive: 
+    get:
+      description: "This endpoint returns a 200 status code when the HTTP server is up running.\nThis status does currently not include checks whether the database connection is working.\nThis endpoint does not require the `X-Forwarded-Proto` header when TLS termination is set.\n\nBe aware that if you are running multiple nodes, the health status will never refer to the cluster state, only to a single instance."
+      tags:
+        - health
+      summary: "Check the Alive Status"
+      operationId: isInstanceAlive
+      responses:
+        200: 
+          description: "Health Status"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HealthStatus'
+        500:
+          $ref: '#/components/responses/Error'
+  /health/ready:
+    get:
+      description: "This endpoint returns a 200 status code when the HTTP server is up running and the environment dependencies (e.g.\nthe database) are responsive as well.\n\nThis status does currently not include checks whether the database connection is working.\nThis endpoint does not require the `X-Forwarded-Proto` header when TLS termination is set.\n\nBe aware that if you are running multiple nodes of ORY Hydra, the health status will never refer to the cluster state, only to a single instance."
+      tags:
+        - health
+      summary: "Check the Readiness Status"
+      operationId: isInstanceReady
+      responses:
+        200:
+          description: 'Health status'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HealthStatus'
+        503:
+          description: 'Health Not Ready status'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HealthNotReadyStatus'    
+components:
+  responses:
+    Versions:
+      description: |-
+        200 response
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Versions'
+    Error: 
+      description: Unexpected error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+  schemas:
+    Error:
+      required:
+        - code
+        - message
+      properties:
+        code:
+          type: integer
+          format: int32
+        message:
+          type: string
+    Resources:
+      title: Resources
+      items:
+        $ref: '#/components/schemas/Resource'
+    Resource:
+      required:
+        - apiPath
+        - description
+        - apiVersionNumber
+        - apiUrl
+        - apiDocumentationUrl
+      properties:
+        apiPath:
+          type: string
+          example: "/versions"
+        description:
+          type: string
+          example: "List of API versions"
+        apiVersionNumber:
+          type: number
+          example: 1.1
+        apiUrl:
+          type: string
+          example: "https://tika.docshare.weareconvivio.com/versions"
+        apiDocumentationUrl: 
+          type: string
+          example: "https://developer.docshare.weareconvivio.com/tika/api/versions"
+    Versions:
+      title: Versions
+      items:
+        $ref: '#/components/schemas/Version'
+    Version:
+      required:
+        - version
+        - id
+        - updated
+        - current
+        - deprecated
+      properties:
+        version:
+          type: number
+          example: 1.1
+        id:
+          type: string
+          example: "v1.1"
+        updated:
+          type: string
+          example: "2018-09-13T16:52:11"
+        current:
+          type: boolean
+          example: true
+        deprecated:
+          type: boolean
+          example: false
+    HealthNotReadyStatus:
+        properties:
+          errors:
+            description: 'Errors contains a list of errors that caused the not ready status.'
+            type: object
+            example:
+              code: 503
+              message: "Internal server error"
+            additionalProperties:
+              type: string
+              example: "Nginx"
+    HealthStatus:
+      properties:
+        status:
+          description: 'Status always contains "ok".'
+          type: string
+          example: "ok"
