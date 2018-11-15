@@ -1,6 +1,6 @@
-# LBH & CoL Directory of Services: Provider service
+# LBH & CoL Directory of Services: Data store service
 
-The Provider service contains basic information about a provider in the Directory of Services.
+The data sore service stores and retrieves data in the Directory of Services system.
 
 Runs in Docker.
 
@@ -8,7 +8,7 @@ Runs in Docker.
 
 Documentation for the service is in the `/docs` directory.
 
-API documentation is in OpenAPI 3, in the `/docs/api/provider-service.openapi.yml` file. Also available on SwaggerHub at {@todo: add URL}
+API documentation is in OpenAPI 3, in the `/docs/api/data-store-service.openapi.yml` file. Also available on SwaggerHub at {@todo: add URL}
 
 ## @todo
 
