@@ -64,7 +64,7 @@ services:
       NGINX_ERROR_LOG_LEVEL: debug
       NGINX_BACKEND_HOST: php
       NGINX_VHOST_PRESET: php
-      NGINX_SERVER_ROOT: /var/www/html/laravel/public
+      NGINX_SERVER_ROOT: /var/www/html/source/public
     volumes:
 #      - ./:/var/www/html
 # Options for macOS users (https://wodby.com/stacks/php/docs/local/docker-for-mac/)

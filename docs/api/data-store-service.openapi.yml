@@ -1,8 +1,8 @@
 openapi: 3.0.0
 info:
-  title: 'LBH & CoL Directory of Services: Provider Service'
+  title: 'LBH & CoL Directory of Services: Data Store Service'
   description: >-
-    The Provider service contains basic information about a provider in the Directory of Services.
+    The data sore service stores and retrieves data in the Directory of Services system.
   version: 1.0.0
 paths:
   /:
@@ -11,7 +11,7 @@ paths:
         - metadata
       responses:
         '200':
-          description: Returns a list of Tika service resource endpoints
+          description: Returns a list of data store service resource endpoints
           content:
             application/json:
               schema:
@@ -115,10 +115,10 @@ components:
           example: 1.1
         apiUrl:
           type: string
-          example: "https://tika.docshare.weareconvivio.com/versions"
+          example: "https://data.lbhc.weareconvivio.com/versions"
         apiDocumentationUrl: 
           type: string
-          example: "https://developer.docshare.weareconvivio.com/tika/api/versions"
+          example: "https://developer.lbhc.weareconvivio.com/data/api/versions"
     Versions:
       title: Versions
       items:
