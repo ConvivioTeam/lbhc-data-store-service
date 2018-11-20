@@ -147,6 +147,14 @@ paths:
             application/json:
               schema:
                 $ref: '#components/schemas/Providers'
+    delete:
+      description: 'Delete a provider'
+      tags:
+        - providers
+      summary: 'Delete a provider'
+      responses:
+        410:
+          description: 'Provider deleted'
 components:
   responses:
     Versions:
