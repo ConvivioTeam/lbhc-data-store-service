@@ -1,3 +1,33 @@
+# H&C Directory of Services: Data Store microservice app
+
+This application handles the storage and retrieval of data for the Hackney & City Directory of Services.
+
+## About this application
+
+Built with Docker to run as a containerised application.
+
+### Containers
+
+- **MariaDB database**
+  - For persistent data storage.
+  - \>= 10.1
+- **PHP app**
+  - Data processing
+  - Built with [Lumen](http://lumen.laravel.com) by  [Laravel](https://laravel.com/).
+  - \>= 7.1.3
+- **Nginx**
+  - For http request handling
+  - \>= 1.15
+
+### Requirements
+
+Derived from the [Lumen requirements](https://lumen.laravel.com/docs/master/installation): 
+- PHP >= 7.1.3
+- OpenSSL PHP Extension
+- PDO PHP Extension
+- Mbstring PHP Extension
+
+---
 # Lumen PHP Framework
 
 [![Build Status](https://travis-ci.org/laravel/lumen-framework.svg)](https://travis-ci.org/laravel/lumen-framework)
