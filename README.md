@@ -10,9 +10,18 @@ Documentation for the service is in the `/docs` directory.
 
 API documentation is in OpenAPI 3, in the [/docs/api/data-store-service.openapi.yml](./docs/api/data-store-service.openapi.yml) file. Also available on SwaggerHub at {@todo: add URL}
 
-## @todo
+## Run
 
-- extend README.
-- write API specification
-- add documentation
-- build the app
+```
+cd source
+composer install
+cd ..
+make up
+make shell
+cd source
+php artisan migrate:refresh
+```
+
+## Useful links
+
+* [Adminer](http://adminer.store.lbh.localhost)
