@@ -32,8 +32,6 @@ class CreateProvidersTable extends Migration
      */
     public function down()
     {
-        Schema::table('providers', function (Blueprint $table) {
-            Schema::drop('providers');
-        });
+        Schema::dropIfExists('providers');
     }
 }

@@ -34,8 +34,6 @@ class CreateServicesTable extends Migration
      */
     public function down()
     {
-        Schema::table('services', function (Blueprint $table) {
-            Schema::drop('services');
-        });
+        Schema::dropIfExists('services');
     }
 }
