@@ -17,8 +17,8 @@ class CreateProvidersTable extends Migration
             $table->uuid('id');
             $table->string('name');
             $table->boolean('published');
-            $table->uuid('venue_id');
-            $table->uuid('contact_id');
+            $table->uuid('venue_id')->nullable();
+            $table->uuid('contact_id')->nullable();
             $table->datetime('created');
             $table->datetime('updated');
             $table->boolean('flagged');

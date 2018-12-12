@@ -18,9 +18,9 @@ class CreateServicesTable extends Migration
             $table->string('name');
             $table->string('desc');
             $table->uuid('provider_id');
-            $table->uuid('event_id');
-            $table->uuid('elegibility_id');
-            $table->uuid('costoption_id');
+            $table->uuid('event_id')->nullable();
+            $table->uuid('elegibility_id')->nullable();
+            $table->uuid('costoption_id')->nullable();
             $table->datetime('created');
             $table->datetime('updated');
             $table->boolean('flagged');
