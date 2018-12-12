@@ -14,7 +14,7 @@ class CreateCostoptions extends Migration
     public function up()
     {
         Schema::create('costoptions', function (Blueprint $table) {
-            $table->uuid('id');
+            $table->uuid('id')->unique();
             $table->string('option');
         });
     }

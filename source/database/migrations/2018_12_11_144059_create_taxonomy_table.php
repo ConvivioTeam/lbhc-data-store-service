@@ -14,7 +14,7 @@ class CreateTaxonomyTable extends Migration
     public function up()
     {
         Schema::create('taxonomy', function (Blueprint $table) {
-            $table->uuid('id');
+            $table->uuid('id')->unique();
             $table->string('name');
         });
     }

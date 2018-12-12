@@ -14,7 +14,7 @@ class CreateVenues extends Migration
     public function up()
     {
         Schema::create('venues', function (Blueprint $table) {
-            $table->uuid('id');
+            $table->uuid('id')->unique();
             $table->uuid('service_id');
             $table->uuid('provider_id')->nullable();
             $table->string('name');
