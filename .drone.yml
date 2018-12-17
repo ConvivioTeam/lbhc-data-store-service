@@ -9,5 +9,5 @@ steps:
       from_secret: aws_access_key_id
     secret_key:
       from_secret: aws_secret_access_key
-    repo: 983024221644.dkr.ecr.eu-west-2.amazonaws.com/hc-dos/data-store-service
+    repo: hc-dos/data-store-service
     registry: 983024221644.dkr.ecr.eu-west-2.amazonaws.com
