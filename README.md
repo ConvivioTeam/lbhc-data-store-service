@@ -32,7 +32,7 @@ All the commands you need for development can be found by running ```php artisan
 
 Any changes made to the ```master``` branch are built into a docker image and tagged as ```latest```.
 
-There are then uploaded to Amazon ECR.
+There are then uploaded to Amazon ECR. See the [```.drone.yml```](https://github.com/LBHackney-IT/DoS-data-store-service/blob/master/.drone.yml) file for more details.
 
 ## Useful links
 
