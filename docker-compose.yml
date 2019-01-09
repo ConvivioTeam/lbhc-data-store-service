@@ -30,7 +30,7 @@ services:
 #      - /path/to/postgres/data/on/host:/var/lib/postgresql/data # I want to manage volumes manually.
 
   php:
-    image: wodby/php:$PHP_TAG
+    image: convivio/php-kafka:$PHP_TAG
     container_name: "${PROJECT_NAME}_php"
     environment:
       PHP_SENDMAIL_PATH: /usr/sbin/sendmail -t -i -S mailhog:1025
