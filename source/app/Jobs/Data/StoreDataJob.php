@@ -52,7 +52,7 @@ class StoreDataJob extends Job
     public function fire(KafkaJob $job)
     {
         $data = $job->payload()['data'];
-        Log::debug(print_r($data, true), [__METHOD__]);
+
         return;
     }
 
