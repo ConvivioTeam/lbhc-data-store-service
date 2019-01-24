@@ -2,16 +2,11 @@
 
 namespace App\Providers;
 
-use App\Jobs\Data\GetDataJob;
-use App\Jobs\Data\StoreDataJob;
+use App\Component\Utility\DataCommand;
+use App\Component\Utility\DataQuery;
 use Illuminate\Support\ServiceProvider;
 
-/**
- * Class EventSourcedJobProvider
- *
- * @package App\Providers
- */
-class EventSourcedJobProvider extends ServiceProvider
+class CQRSServiceProvider extends ServiceProvider
 {
     public function register()
     {
@@ -23,12 +18,12 @@ class EventSourcedJobProvider extends ServiceProvider
      */
     protected function registerDependencies()
     {
-        $this->app->bind('job.data.store', function ($app) {
-            return new StoreDataJob($app);
+        $this->app->bind('data.command', function ($app, $command) {
+            return new DataCommand($app, $command);
         });
 
-        $this->app->bind('job.data.get', function ($app) {
-            return new GetDataJob($app);
+        $this->app->bind('data.query', function ($app, $query) {
+            return new DataQuery($app, $query);
         });
     }
 
@@ -40,8 +35,9 @@ class EventSourcedJobProvider extends ServiceProvider
     public function provides()
     {
         return [
-            'job.data.store',
-            'job.data.get',
+            'data.command',
+            'data.query',
         ];
     }
+
 }

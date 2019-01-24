@@ -7,12 +7,7 @@ use Illuminate\Support\Facades\Log;
 use Laravel\Lumen\Application;
 use Rapide\LaravelQueueKafka\Queue\Jobs\KafkaJob;
 
-/**
- * Class StoreDataJob
- *
- * @package App\Jobs\Store
- */
-class StoreDataJob extends Job
+class GetDataJob extends Job
 {
     /**
      * Laravel application container.
@@ -20,13 +15,6 @@ class StoreDataJob extends Job
      * @var \Laravel\Lumen\Application
      */
     protected $app;
-
-    /**
-     * Array of job parameters.
-     *
-     * @var array
-     */
-    protected $parameters = [];
 
     /**
      * StoreDataJob constructor.
@@ -50,19 +38,10 @@ class StoreDataJob extends Job
     public function fire(KafkaJob $job)
     {
         $data = $job->payload()['data'];
-
+        Log::debug(print_r($data, true), [__METHOD__]);
+        /** @var \App\Component\Utility\DataQuery $dataQuery */
+        $dataQuery = $this->app->makeWith('data.query', $data);
+        $dataQuery->dispatch();
         return;
     }
-
-    /**
-     * Delete and item from the queue.
-     *
-     * @return void
-     */
-    public function delete()
-    {
-        parent::delete();
-    }
-
-
 }
