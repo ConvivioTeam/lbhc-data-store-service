@@ -50,7 +50,11 @@ class UpdateDataJob extends Job
     public function fire(KafkaJob $job)
     {
         $data = $job->payload()['data'];
-
+        $data['method'] = 'update';
+        Log::debug(print_r($data, true));
+        /** @var \App\Component\Utility\DataQuery $dataQuery */
+        $dataQuery = $this->app->makeWith('data.command', $data);
+        $dataQuery->dispatch();
         return;
     }
 

@@ -18,10 +18,11 @@ class DbInsert implements DbInsertInterface
 
     private $id;
 
-    public function __construct($table)
+    public function __construct($table, $id = null)
     {
         $this->db = new DB();
         $this->query = $this->db::table($table);
+        $this->id = $id;
     }
 
     public function dispatch($method, $args)
@@ -33,12 +34,14 @@ class DbInsert implements DbInsertInterface
 
     protected function create($args)
     {
-        $this->query->insert($args);
-        $this->id = $args['id'];
+        $this->query->insert($args['values']);
+        $this->id = $args['values']['id'];
     }
 
     protected function update($args)
     {
-        // TODO: do something
+        $this->query->where('id', $args['id'])
+            ->update($args['values']);
+        $this->id = $args['id'];
     }
 }

@@ -50,8 +50,9 @@ class StoreDataJob extends Job
     public function fire(KafkaJob $job)
     {
         $data = $job->payload()['data'];
+        $data['method'] = 'create';
         /** @var \App\Component\Utility\DataQuery $dataQuery */
-        $dataQuery = $this->app->makeWith('data.job.', $data);
+        $dataQuery = $this->app->makeWith('data.command', $data);
         $dataQuery->dispatch();
         return;
     }
