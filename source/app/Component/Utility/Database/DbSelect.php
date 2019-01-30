@@ -3,6 +3,7 @@
 namespace App\Component\Utility\Database;
 
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Easy way to get data from the database.
@@ -11,9 +12,14 @@ use Illuminate\Support\Facades\DB;
  */
 class DbSelect implements DbSelectInterface
 {
-
+    /**
+     * @var \Illuminate\Support\Facades\DB
+     */
     private $db;
 
+    /**
+     * @var \Illuminate\Database\Query\Builder
+     */
     private $query;
 
     private $limit = 50;
@@ -27,16 +33,25 @@ class DbSelect implements DbSelectInterface
     public function index()
     {
         $this->query->select(['*']);
-        $this->query->limit($this->limit);
+    }
+
+    public function getById($id)
+    {
+        $this->limit = 1;
+        $this->query->select()->where('id', $id);
     }
 
     /**
+     * @param string $method
+     * @param mixed $args
+     *
      * @return \Illuminate\Support\Collection|mixed
      */
-    public function dispatch($method)
+    public function dispatch($method, $args = null)
     {
-        $this->$method();
-        return $this->get();
+        $this->$method($args);
+        $this->query->limit($this->limit);
+        return $this->limit == 1 ? $this->get()->first() : $this->get();
     }
 
     /**

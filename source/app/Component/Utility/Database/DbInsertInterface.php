@@ -2,7 +2,7 @@
 
 namespace App\Component\Utility\Database;
 
-interface DbSelectInterface extends DbUtilityInterface
+interface DbInsertInterface extends DbUtilityInterface
 {
 
 }

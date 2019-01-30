@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use App\Jobs\Data\GetDataJob;
 use App\Jobs\Data\StoreDataJob;
+use App\Jobs\Data\UpdateDataJob;
 use Illuminate\Support\ServiceProvider;
 
 /**
@@ -27,6 +28,10 @@ class EventSourcedJobProvider extends ServiceProvider
             return new StoreDataJob($app);
         });
 
+        $this->app->bind('job.data.update', function ($app) {
+            return new UpdateDataJob($app);
+        });
+
         $this->app->bind('job.data.get', function ($app) {
             return new GetDataJob($app);
         });
@@ -41,6 +46,7 @@ class EventSourcedJobProvider extends ServiceProvider
     {
         return [
             'job.data.store',
+            'job.data.update',
             'job.data.get',
         ];
     }

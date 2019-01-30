@@ -8,11 +8,11 @@ use Laravel\Lumen\Application;
 use Rapide\LaravelQueueKafka\Queue\Jobs\KafkaJob;
 
 /**
- * Class StoreDataJob
+ * Class UpdateDataJob
  *
  * @package App\Jobs\Store
  */
-class StoreDataJob extends Job
+class UpdateDataJob extends Job
 {
     /**
      * Laravel application container.
@@ -50,9 +50,7 @@ class StoreDataJob extends Job
     public function fire(KafkaJob $job)
     {
         $data = $job->payload()['data'];
-        /** @var \App\Component\Utility\DataQuery $dataQuery */
-        $dataQuery = $this->app->makeWith('data.job.', $data);
-        $dataQuery->dispatch();
+
         return;
     }
 
