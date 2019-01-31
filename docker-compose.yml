@@ -16,6 +16,8 @@ services:
 #      - /path/to/mariadb/data/on/host:/var/lib/mysql # I want to manage volumes manually.
     ports:
       - "3366:3306"
+    networks:
+      - store
 
 #  postgres:
 #    image: wodby/postgres:$POSTGRES_TAG
@@ -60,6 +62,8 @@ services:
 #      - docker-sync:/var/www/html # Docker-sync
 ## For Xdebug profiler files
 #      - files:/mnt/files
+    networks:
+      - store
 
   nginx:
     image: wodby/nginx:$NGINX_TAG
@@ -78,17 +82,21 @@ services:
       - ./:/var/www/html:cached # User-guided caching
 #      - docker-sync:/var/www/html # Docker-sync
     labels:
-      - 'traefik.backend=nginx'
+      - 'traefik.backend=${PROJECT_NAME}_nginx'
       - 'traefik.port=80'
       - 'traefik.frontend.rule=Host:${PROJECT_BASE_URL}'
+      - 'traefik.docker.network=traefik'
+    networks:
+      - traefik
+      - store
 
-  mailhog:
-    image: mailhog/mailhog
-    container_name: "${PROJECT_NAME}_mailhog"
-    labels:
-      - 'traefik.backend=mailhog'
-      - 'traefik.port=8025'
-      - 'traefik.frontend.rule=Host:mailhog.${PROJECT_BASE_URL}'
+  # mailhog:
+  #   image: mailhog/mailhog
+  #   container_name: "${PROJECT_NAME}_mailhog"
+  #   labels:
+  #     - 'traefik.backend=mailhog'
+  #     - 'traefik.port=8025'
+  #     - 'traefik.frontend.rule=Host:mailhog.${PROJECT_BASE_URL}'
 
 #  varnish:
 #    image: wodby/varnish:$VARNISH_TAG
@@ -122,7 +130,9 @@ services:
     labels:
       - 'traefik.backend=adminer'
       - 'traefik.port=9000'
-      - 'traefik.frontend.rule=Host:adminer.${PROJECT_BASE_URL}'
+      - 'traefik.frontend.rule=Host:adminer.${PROJECT_BASE_URL}'#
+    networks:
+      - store
 
 #  pma:
 #    image: phpmyadmin/phpmyadmin
@@ -233,15 +243,15 @@ services:
 #    ports:
 #      - "9000:9000"
 
-  traefik:
-    image: traefik
-    container_name: "${PROJECT_NAME}_traefik"
-    command: -c /dev/null --web --docker --logLevel=INFO
-    ports:
-      - '80:80'
-#      - '8080:8080' # Dashboard
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
+#   traefik:
+#     image: traefik
+#     container_name: "${PROJECT_NAME}_traefik"
+#     command: -c /dev/null --web --docker --logLevel=INFO
+#     ports:
+#       - '80:80'
+# #      - '8080:8080' # Dashboard
+#     volumes:
+#       - /var/run/docker.sock:/var/run/docker.sock
 
 volumes:
   project-db-data:
@@ -250,3 +260,8 @@ volumes:
 #    external: true
 ## For Xdebug profiler
 #  files:
+
+networks:
+  traefik:
+    external: true
+  store:
