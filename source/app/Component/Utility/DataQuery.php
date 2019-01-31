@@ -115,12 +115,12 @@ class DataQuery extends AbstractDataUtility
      *
      * @return array
      */
-    protected function getConfig()
-    {
-        return [
-            'queue' => config('queue.connections.kafka.queue'),
-            'brokers' => config('queue.connections.kafka.brokers'),
-            'consumer_group_id' => config('queue.connections.kafka.consumer_group_id'),
-        ];
-    }
+//    protected function getConfig()
+//    {
+//        return [
+//            'queue' => config('queue.connections.kafka.queue'),
+//            'brokers' => config('queue.connections.kafka.brokers'),
+//            'consumer_group_id' => config('queue.connections.kafka.consumer_group_id'),
+//        ];
+//    }
 }

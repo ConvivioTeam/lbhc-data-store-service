@@ -26,6 +26,11 @@ class DataCommand extends AbstractDataUtility
     /**
      * @var string
      */
+    private $type;
+
+    /**
+     * @var string
+     */
     private $table;
 
     /**
@@ -65,13 +70,14 @@ class DataCommand extends AbstractDataUtility
 
     public function __construct(Application $app, $command)
     {
-        $this->app = $app;
+        parent::__construct($app);
         $this->command = $command;
 //        Log::debug(print_r($this->command, true), [__CLASS__]);
-        $this->setTable($this->getCommandItem('type'));
+        $this->type = $this->getCommandItem('type');
+        $this->setTable($this->type);
         $this->method = $this->getCommandItem('method', 'create');
         $this->dbInsert = new DbInsert($this->table);
-        $this->id = uniqid('', true);
+        $this->id =  $this->method == 'update' ? $this->getCommandItem('id') : uniqid('', true);
     }
 
     public function dispatch()
@@ -82,10 +88,16 @@ class DataCommand extends AbstractDataUtility
             unset($validFields['created']);
             unset($validFields['id']);
         }
-        $params['values'] = array_intersect_key(array_merge($params['values'], $this->defaultInsertValues()), $validFields);
-        Log::debug(print_r($params, true), [__METHOD__]);
+        $params['values'] = array_intersect_key(
+            array_merge(
+                $params['values'],
+                $this->defaultInsertValues()
+            ),
+            $validFields
+        );
         $this->dbInsert = new DbInsert($this->table, $this->getCommandItem('id'));
         $this->dbInsert->dispatch($this->method, $params);
+        $this->produceEvent();
 //        return $this->get($this->id);
     }
 
@@ -105,8 +117,14 @@ class DataCommand extends AbstractDataUtility
 
     public function getEventData()
     {
+        $data = [
+            'type' => $this->type,
+            'id' => $this->id,
+        ];
         $this->dbSelect = new DbSelect($this->table);
         $this->response = $this->dbSelect->dispatch('getById', $this->id);
+        $data['data'] = $this->response;
+        return $data;
     }
 
     /**

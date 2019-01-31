@@ -3,7 +3,6 @@
 namespace App\Jobs\Data;
 
 use App\Jobs\Job;
-use Illuminate\Support\Facades\Log;
 use Laravel\Lumen\Application;
 use Rapide\LaravelQueueKafka\Queue\Jobs\KafkaJob;
 
@@ -20,6 +19,11 @@ class StoreDataJob extends Job
      * @var \Laravel\Lumen\Application
      */
     protected $app;
+
+    /**
+     * @var KafkaJob
+     */
+    protected $job;
 
     /**
      * Array of job parameters.
@@ -47,13 +51,15 @@ class StoreDataJob extends Job
      *
      * @return void
      */
-    public function fire(KafkaJob $job)
+    public function fire(KafkaJob $job, $jobData)
     {
+        $this->job = $job;
         $data = $job->payload()['data'];
         $data['method'] = 'create';
         /** @var \App\Component\Utility\DataQuery $dataQuery */
         $dataQuery = $this->app->makeWith('data.command', $data);
         $dataQuery->dispatch();
+        $this->delete();
         return;
     }
 
@@ -64,8 +70,6 @@ class StoreDataJob extends Job
      */
     public function delete()
     {
-        parent::delete();
+        $this->job->delete();
     }
-
-
 }

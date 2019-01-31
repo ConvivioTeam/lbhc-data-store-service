@@ -51,7 +51,7 @@ class DbSelect implements DbSelectInterface
     {
         $this->$method($args);
         $this->query->limit($this->limit);
-        return $this->limit == 1 ? $this->get()->first() : $this->get();
+        return $this->limit == 1 ? $this->get()->first() : $this->get()->all();
     }
 
     /**
