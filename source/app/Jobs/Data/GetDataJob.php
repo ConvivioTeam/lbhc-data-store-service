@@ -44,7 +44,7 @@ class GetDataJob extends Job
     {
         $this->job = $job;
         $data = $job->payload()['data'];
-        Log::debug(print_r($data, true), [__METHOD__]);
+//        Log::debug(print_r($data, true), [__METHOD__]);
         /** @var \App\Component\Utility\DataQuery $dataQuery */
         $dataQuery = $this->app->makeWith('data.query', $data);
         $dataQuery->dispatch();
