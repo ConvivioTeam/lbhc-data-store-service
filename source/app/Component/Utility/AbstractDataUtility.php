@@ -43,7 +43,7 @@ abstract class AbstractDataUtility implements DataUtilityInterface
 
     public function produceEvent()
     {
-        Log::debug(print_r($this->getEventData(), true), [__METHOD__]);
+//        Log::debug(print_r($this->getEventData(), true), [__METHOD__]);
         $this->queue->push($this->eventJob, $this->getEventData(), $this->eventQueueProduce);
     }
 
