@@ -2,6 +2,7 @@
 
 namespace App\Component\Utility\Database;
 
+use http\Exception\InvalidArgumentException;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
@@ -17,6 +18,8 @@ class DbSelect implements DbSelectInterface
      */
     private $db;
 
+    private $table;
+
     /**
      * @var \Illuminate\Database\Query\Builder
      */
@@ -26,13 +29,23 @@ class DbSelect implements DbSelectInterface
 
     public function __construct($table)
     {
+        $this->table = $table;
         $this->db = new DB();
-        $this->query = $this->db::table($table);
+        $this->query = $this->db::table($this->table);
     }
 
     public function index()
     {
         $this->query->select(['*']);
+    }
+
+    public function select($args)
+    {
+        if (empty($args['id'])) {
+            throw new InvalidArgumentException(sprintf('No ID in select request for table %s', $this->table));
+        }
+        $id = $args['id'];
+        $this->getById($id);
     }
 
     public function getById($id)
@@ -45,7 +58,7 @@ class DbSelect implements DbSelectInterface
      * @param string $method
      * @param mixed $args
      *
-     * @return \Illuminate\Support\Collection|mixed
+     * @return array|mixed
      */
     public function dispatch($method, $args = null)
     {

@@ -18,6 +18,11 @@ class DataQuery extends AbstractDataUtility
     protected $query;
 
     /**
+     * @var string|null
+     */
+    protected $id;
+
+    /**
      * @var string
      */
     protected $queryTable;
@@ -45,9 +50,10 @@ class DataQuery extends AbstractDataUtility
         parent::__construct($app);
         $this->query = $query;
         $this->setQueryTable();
-        $queryType = empty($this->query['type']) ? 'index' : $this->query['type'];
+        $queryType = empty($this->query['queryType']) ? 'index' : $this->query['queryType'];
         $this->setQueryType($queryType);
         $this->dbSelect = new DbSelect($this->getQueryTable());
+        $this->id =  $queryType == 'select' ? $this->query['id'] : null;
     }
 
     /**
@@ -57,7 +63,7 @@ class DataQuery extends AbstractDataUtility
      */
     public function dispatch()
     {
-        $this->response = $this->dbSelect->dispatch($this->getQueryType());
+        $this->response = $this->dbSelect->dispatch($this->getQueryType(), $this->query);
         $this->produceEvent();
     }
 
@@ -66,10 +72,21 @@ class DataQuery extends AbstractDataUtility
      */
     public function getEventData()
     {
-        return [
+        $eventData = [
             'query' => $this->query,
-            'data' => $this->response->values(),
+            'queryType' => $this->queryType,
+            'type' => $this->getQueryTable(),
+            'id' => $this->id,
+            'data' => $this->response,
         ];
+        if (is_object($eventData['data'])) {
+            $eventData['data']->type = $this->getQueryTable();
+        } elseif (is_array($eventData['data'])) {
+            foreach ($eventData['data'] as $id => $item) {
+                $eventData['data'][$id]->type = $this->getQueryTable();
+            }
+        }
+        return $eventData;
     }
 
     /**
@@ -78,10 +95,10 @@ class DataQuery extends AbstractDataUtility
     public function setQueryTable(string $queryTable = null): void
     {
         if (!isset($queryTable)) {
-            if (empty($this->query['table'])) {
+            if (empty($this->query['type'])) {
                 throw new InvalidArgumentException('Missing query table');
             }
-            $queryTable = $this->query['table'];
+            $queryTable = $this->query['type'];
         }
         $this->queryTable = $queryTable;
     }
@@ -91,7 +108,7 @@ class DataQuery extends AbstractDataUtility
      */
     public function getQueryTable()
     {
-        return $this->query['table'];
+        return $this->query['type'];
     }
 
     public function getQueryType()

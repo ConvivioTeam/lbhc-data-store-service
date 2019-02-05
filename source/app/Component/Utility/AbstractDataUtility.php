@@ -3,6 +3,7 @@
 namespace App\Component\Utility;
 
 
+use Illuminate\Support\Facades\Log;
 use Laravel\Lumen\Application;
 use Rapide\LaravelQueueKafka\Queue\Connectors\KafkaConnector;
 
@@ -28,7 +29,7 @@ abstract class AbstractDataUtility implements DataUtilityInterface
     public $eventQueueProduce = 'api';
 
     /**
-     * @var \Illuminate\Support\Collection
+     * @var array
      */
     protected $response;
 
@@ -42,6 +43,7 @@ abstract class AbstractDataUtility implements DataUtilityInterface
 
     public function produceEvent()
     {
+        Log::debug(print_r($this->getEventData(), true), [__METHOD__]);
         $this->queue->push($this->eventJob, $this->getEventData(), $this->eventQueueProduce);
     }
 

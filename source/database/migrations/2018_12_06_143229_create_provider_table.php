@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateContacts extends Migration
+class CreateProviderTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,15 +13,12 @@ class CreateContacts extends Migration
      */
     public function up()
     {
-        Schema::create('contacts', function (Blueprint $table) {
+        Schema::create('provider', function (Blueprint $table) {
             $table->uuid('id')->unique();
-            $table->string('url')->nullable();
-            $table->string('email');
             $table->string('name');
-            $table->string('position')->nullable();
-            $table->string('social_facebook')->nullable();
-            $table->string('social_twitter')->nullable();
-            $table->string('phonenumber')->nullable();
+            $table->boolean('published');
+            $table->uuid('venue_id')->nullable();
+            $table->uuid('contact_id')->nullable();
             $table->datetime('created');
             $table->datetime('updated');
             $table->boolean('flagged');
@@ -35,6 +32,6 @@ class CreateContacts extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('contacts');
+        Schema::dropIfExists('provider');
     }
 }

@@ -17,6 +17,11 @@ class GetDataJob extends Job
     protected $app;
 
     /**
+     * @var KafkaJob
+     */
+    protected $job;
+
+    /**
      * StoreDataJob constructor.
      *
      * @param \Laravel\Lumen\Application $app - Application container.
@@ -37,11 +42,23 @@ class GetDataJob extends Job
      */
     public function fire(KafkaJob $job)
     {
+        $this->job = $job;
         $data = $job->payload()['data'];
         Log::debug(print_r($data, true), [__METHOD__]);
         /** @var \App\Component\Utility\DataQuery $dataQuery */
         $dataQuery = $this->app->makeWith('data.query', $data);
         $dataQuery->dispatch();
+        $this->delete();
         return;
+    }
+
+    /**
+     * Delete and item from the queue.
+     *
+     * @return void
+     */
+    public function delete()
+    {
+        $this->job->delete();
     }
 }

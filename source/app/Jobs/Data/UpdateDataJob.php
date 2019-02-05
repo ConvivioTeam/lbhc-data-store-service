@@ -55,14 +55,20 @@ class UpdateDataJob extends Job
      */
     public function fire(KafkaJob $job, $jobData)
     {
-        $this->job = $job;
-        $data = $job->payload()['data'];
-        $data['method'] = 'update';
-        Log::debug(print_r($jobData, true), [__METHOD__]);
-        /** @var \App\Component\Utility\DataQuery $dataQuery */
-        $dataQuery = $this->app->makeWith('data.command', $data);
-        $dataQuery->dispatch();
-        $this->delete();
+        try {
+            $this->job = $job;
+            $data = $job->payload()['data'];
+            $data['method'] = 'update';
+            Log::debug(print_r($jobData, true), [__METHOD__]);
+            /** @var \App\Component\Utility\DataQuery $dataQuery */
+            $dataQuery = $this->app->makeWith('data.command', $data);
+            $dataQuery->dispatch();
+            $this->delete();
+        }
+        catch (\PDOException $e) {
+            $this->delete();
+            throw $e;
+        }
         return;
     }
 

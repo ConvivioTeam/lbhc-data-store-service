@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateEligibilities extends Migration
+class CreateCostOption extends Migration
 {
     /**
      * Run the migrations.
@@ -13,9 +13,9 @@ class CreateEligibilities extends Migration
      */
     public function up()
     {
-        Schema::create('eligibilities', function (Blueprint $table) {
+        Schema::create('costoption', function (Blueprint $table) {
             $table->uuid('id')->unique();
-            $table->string('eligibility');
+            $table->string('option');
         });
     }
 
@@ -26,6 +26,6 @@ class CreateEligibilities extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('eligibilities');
+        Schema::dropIfExists('costoption');
     }
 }
