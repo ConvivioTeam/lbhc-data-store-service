@@ -56,8 +56,12 @@ class StoreDataJob extends Job
         $this->job = $job;
         $data = $job->payload()['data'];
         $data['method'] = 'create';
+        $params = [
+            $data,
+            $this->job->getJobId()
+        ];
         /** @var \App\Component\Utility\DataQuery $dataQuery */
-        $dataQuery = $this->app->makeWith('data.command', $data);
+        $dataQuery = $this->app->makeWith('data.command', $params);
         $dataQuery->dispatch();
         $this->delete();
         return;

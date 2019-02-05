@@ -41,13 +41,14 @@ class DataQuery extends AbstractDataUtility
      * DataQuery constructor.
      *
      * @param \Laravel\Lumen\Application $app
-     * @param $query
+     * @param mixed $query
+     * @param string $correlationId
      *
      * @return void
      */
-    public function __construct(Application $app, $query)
+    public function __construct(Application $app, $query, $correlationId)
     {
-        parent::__construct($app);
+        parent::__construct($app, $correlationId);
         $this->query = $query;
         $this->setQueryTable();
         $queryType = empty($this->query['queryType']) ? 'index' : $this->query['queryType'];

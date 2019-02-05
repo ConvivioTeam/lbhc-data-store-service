@@ -60,8 +60,12 @@ class UpdateDataJob extends Job
             $data = $job->payload()['data'];
             $data['method'] = 'update';
             // Log::debug(print_r($jobData, true), [__METHOD__]);
+            $params = [
+                $data,
+                $this->job->getJobId()
+            ];
             /** @var \App\Component\Utility\DataQuery $dataQuery */
-            $dataQuery = $this->app->makeWith('data.command', $data);
+            $dataQuery = $this->app->makeWith('data.command', $params);
             $dataQuery->dispatch();
             $this->delete();
         }

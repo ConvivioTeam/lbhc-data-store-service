@@ -21,6 +21,9 @@ class DataCommand extends AbstractDataUtility
      */
     protected $command = [];
 
+    /**
+     * @var mixed|null
+     */
     protected $method;
 
     /**
@@ -61,6 +64,7 @@ class DataCommand extends AbstractDataUtility
         'id' => 'id',
         'name' => 'name',
         'published' => 'published',
+        'description' => 'description',
         'venue_id' => 'venue_id',
         'contact_id' => 'contact_id',
         'created' => 'created',
@@ -68,16 +72,16 @@ class DataCommand extends AbstractDataUtility
         'flagged' => 'flagged',
     ];
 
-    public function __construct(Application $app, $command)
+    public function __construct(Application $app, $command, $correlationId)
     {
-        parent::__construct($app);
+        parent::__construct($app, $correlationId);
         $this->command = $command;
 //        Log::debug(print_r($this->command, true), [__CLASS__]);
         $this->type = $this->getCommandItem('type');
         $this->setTable($this->type);
         $this->method = $this->getCommandItem('method', 'create');
         $this->dbInsert = new DbInsert($this->table);
-        $this->id =  $this->method == 'update' ? $this->getCommandItem('id') : uniqid('', true);
+        $this->id =  $this->method == 'update' ? $this->getCommandItem('id') : $this->correlationId;
     }
 
     public function dispatch()

@@ -24,6 +24,11 @@ abstract class AbstractDataUtility implements DataUtilityInterface
     /**
      * @var string
      */
+    protected $correlationId;
+
+    /**
+     * @var string
+     */
     public $eventJob = 'job.api.data';
 
     public $eventQueueProduce = 'api';
@@ -34,11 +39,13 @@ abstract class AbstractDataUtility implements DataUtilityInterface
     protected $response;
 
 
-    public function __construct(Application $app)
+    public function __construct(Application $app, $correlationId)
     {
         $this->app = $app;
+        $this->correlationId = $correlationId;
         $connector = new KafkaConnector($this->app);
         $this->queue = $connector->connect($this->getConfig());
+        $this->queue->setCorrelationId($this->correlationId);
     }
 
     public function produceEvent()

@@ -16,6 +16,7 @@ class CreateProviderTable extends Migration
         Schema::create('provider', function (Blueprint $table) {
             $table->uuid('id')->unique();
             $table->string('name');
+            $table->longText('description')->nullable();
             $table->boolean('published');
             $table->uuid('venue_id')->nullable();
             $table->uuid('contact_id')->nullable();
