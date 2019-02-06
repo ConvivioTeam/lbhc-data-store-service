@@ -2,6 +2,8 @@
 
 namespace App\Component\Utility;
 
+use App\Component\Model\AbstractModel;
+use App\Component\Model\ModelConfigurationException;
 use App\Component\Utility\Database\DbInsert;
 use App\Component\Utility\Database\DbSelect;
 use Illuminate\Support\Facades\Log;
@@ -47,6 +49,11 @@ class DataCommand extends AbstractDataUtility
     private $id;
 
     /**
+     * @var AbstractModel
+     */
+    protected $model;
+
+    /**
      * @var \DateTime
      */
 
@@ -60,17 +67,21 @@ class DataCommand extends AbstractDataUtility
      */
     protected $dbSelect;
 
-    private $validFields = [
-        'id' => 'id',
-        'name' => 'name',
-        'published' => 'published',
-        'description' => 'description',
-        'venue_id' => 'venue_id',
-        'contact_id' => 'contact_id',
-        'created' => 'created',
-        'updated' => 'updated',
-        'flagged' => 'flagged',
-    ];
+    /**
+     * @var bool
+     */
+    protected $hasError = false;
+
+    /**
+     * @var \Exception|null
+     */
+    protected $error;
+
+    /**
+     * @var array
+     */
+    protected $params;
+
 
     public function __construct(Application $app, $command, $correlationId)
     {
@@ -82,25 +93,56 @@ class DataCommand extends AbstractDataUtility
         $this->method = $this->getCommandItem('method', 'create');
         $this->dbInsert = new DbInsert($this->table);
         $this->id =  $this->method == 'update' ? $this->getCommandItem('id') : $this->correlationId;
+        $modelAbstract = "model.{$this->type}";
+        $this->model = $this->app->makeWith($modelAbstract);
+        $this->validateModel();
+    }
+
+    protected function validateModel()
+    {
+        try {
+            $this->model->validate();
+        } catch (ModelConfigurationException $e) {
+            $this->setHasError(true);
+            $this->eventJob = 'job.api.error';
+            $this->setError($e);
+        }
+    }
+
+    protected function validateFields($fields)
+    {
+        try {
+            $this->model->validateFields($fields);
+        } catch (ModelConfigurationException $e) {
+            $this->setHasError(true);
+            $this->eventJob = 'job.api.error';
+            $this->setError($e);
+        }
     }
 
     public function dispatch()
     {
-        $params = $this->command;
-        $validFields = $this->validFields;
-        if ($this->method == 'update') {
-            unset($validFields['created']);
-            unset($validFields['id']);
+        if (!$this->hasError()) {
+            $params = $this->command;
+            $validFields = $this->model->getValidFields();
+            if ($this->method == 'update') {
+                unset($validFields['created']);
+                unset($validFields['id']);
+            }
+            $params['values'] = array_intersect_key(
+                array_merge(
+                    $params['values'],
+                    $this->defaultInsertValues()
+                ),
+                $validFields
+            );
+            $this->params = $params;
+            $this->validateFields($this->params['values']);
+            if (!$this->hasError()) {
+                $this->dbInsert = new DbInsert($this->table, $this->getCommandItem('id'));
+                $this->dbInsert->dispatch($this->method, $this->params);
+            }
         }
-        $params['values'] = array_intersect_key(
-            array_merge(
-                $params['values'],
-                $this->defaultInsertValues()
-            ),
-            $validFields
-        );
-        $this->dbInsert = new DbInsert($this->table, $this->getCommandItem('id'));
-        $this->dbInsert->dispatch($this->method, $params);
         $this->produceEvent();
 //        return $this->get($this->id);
     }
@@ -119,15 +161,48 @@ class DataCommand extends AbstractDataUtility
         ];
     }
 
+    /**
+     * @return bool
+     */
+    public function hasError(): bool
+    {
+        return $this->hasError;
+    }
+
+    /**
+     * @param bool $hasError
+     */
+    public function setHasError(bool $hasError): void
+    {
+        $this->hasError = $hasError;
+    }
+
+    /**
+     * @param \Exception|null $error
+     */
+    public function setError(?\Exception $error): void
+    {
+        $this->error = $error;
+    }
+
     public function getEventData()
     {
         $data = [
             'type' => $this->type,
             'id' => $this->id,
+            'error' => $this->hasError(),
         ];
-        $this->dbSelect = new DbSelect($this->table);
-        $this->response = $this->dbSelect->dispatch('getById', $this->id);
-        $data['data'] = $this->response;
+        if ($this->hasError()) {
+            $data['data'] = [
+                'code' => $this->error->getCode(),
+                'message' => $this->error->getMessage(),
+                'fields' => $this->params['values'],
+            ];
+        } else {
+            $this->dbSelect = new DbSelect($this->table);
+            $this->response = $this->dbSelect->dispatch('getById', $this->id);
+            $data['data'] = $this->response;
+        }
         return $data;
     }
 

@@ -16,10 +16,10 @@ class CreateServiceTable extends Migration
         Schema::create('service', function (Blueprint $table) {
             $table->uuid('id')->unique();
             $table->string('name');
-            $table->string('desc');
+            $table->longText('description')->nullable();
             $table->uuid('provider_id');
             $table->uuid('event_id')->nullable();
-            $table->uuid('elegibility_id')->nullable();
+            $table->uuid('eligibility_id')->nullable();
             $table->uuid('costoption_id')->nullable();
             $table->datetime('created');
             $table->datetime('updated');

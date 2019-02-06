@@ -42,5 +42,4 @@ class CQRSServiceProvider extends ServiceProvider
             'data.query',
         ];
     }
-
 }
