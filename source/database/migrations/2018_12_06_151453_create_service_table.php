@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateVenues extends Migration
+class CreateServiceTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,13 +13,14 @@ class CreateVenues extends Migration
      */
     public function up()
     {
-        Schema::create('venues', function (Blueprint $table) {
+        Schema::create('service', function (Blueprint $table) {
             $table->uuid('id')->unique();
-            $table->uuid('service_id');
-            $table->uuid('provider_id')->nullable();
             $table->string('name');
-            $table->string('address');
-            $table->string('details');
+            $table->longText('description')->nullable();
+            $table->uuid('provider_id');
+            $table->uuid('event_id')->nullable();
+            $table->uuid('eligibility_id')->nullable();
+            $table->uuid('costoption_id')->nullable();
             $table->datetime('created');
             $table->datetime('updated');
             $table->boolean('flagged');
@@ -33,6 +34,6 @@ class CreateVenues extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('venues');
+        Schema::dropIfExists('service');
     }
 }
