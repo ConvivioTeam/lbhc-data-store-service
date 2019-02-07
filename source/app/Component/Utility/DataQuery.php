@@ -65,6 +65,9 @@ class DataQuery extends AbstractDataUtility
     public function dispatch()
     {
         $this->response = $this->dbSelect->dispatch($this->getQueryType(), $this->query);
+        if (empty($this->response)) {
+            $this->setHasError(true);
+        }
         $this->produceEvent();
     }
 
@@ -79,7 +82,15 @@ class DataQuery extends AbstractDataUtility
             'type' => $this->getQueryTable(),
             'id' => $this->id,
             'data' => $this->response,
+            'error' => false,
+            'code' => 200,
+            'message' => 'Found',
         ];
+        if ($this->hasError()) {
+            $eventData['code'] = 404;
+            $eventData['message'] = 'Not found';
+            $eventData['error'] = true;
+        }
         if (is_object($eventData['data'])) {
             $eventData['data']->type = $this->getQueryTable();
         } elseif (is_array($eventData['data'])) {
@@ -126,19 +137,4 @@ class DataQuery extends AbstractDataUtility
     {
         $this->queryType = $queryType;
     }
-
-
-    /**
-     * Get the queue config.
-     *
-     * @return array
-     */
-//    protected function getConfig()
-//    {
-//        return [
-//            'queue' => config('queue.connections.kafka.queue'),
-//            'brokers' => config('queue.connections.kafka.brokers'),
-//            'consumer_group_id' => config('queue.connections.kafka.consumer_group_id'),
-//        ];
-//    }
 }

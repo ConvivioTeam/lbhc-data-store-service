@@ -68,16 +68,6 @@ class DataCommand extends AbstractDataUtility
     protected $dbSelect;
 
     /**
-     * @var bool
-     */
-    protected $hasError = false;
-
-    /**
-     * @var \Exception|null
-     */
-    protected $error;
-
-    /**
      * @var array
      */
     protected $params;
@@ -115,7 +105,6 @@ class DataCommand extends AbstractDataUtility
             $this->model->validateFields($fields);
         } catch (ModelConfigurationException $e) {
             $this->setHasError(true);
-            $this->eventJob = 'job.api.error';
             $this->setError($e);
         }
     }
@@ -161,36 +150,14 @@ class DataCommand extends AbstractDataUtility
         ];
     }
 
-    /**
-     * @return bool
-     */
-    public function hasError(): bool
-    {
-        return $this->hasError;
-    }
-
-    /**
-     * @param bool $hasError
-     */
-    public function setHasError(bool $hasError): void
-    {
-        $this->hasError = $hasError;
-    }
-
-    /**
-     * @param \Exception|null $error
-     */
-    public function setError(?\Exception $error): void
-    {
-        $this->error = $error;
-    }
-
     public function getEventData()
     {
         $data = [
             'type' => $this->type,
             'id' => $this->id,
-            'error' => $this->hasError(),
+            'error' => false,
+            'code' => 200,
+            'message' => 'Found',
         ];
         if ($this->hasError()) {
             $data['data'] = [
@@ -201,6 +168,12 @@ class DataCommand extends AbstractDataUtility
         } else {
             $this->dbSelect = new DbSelect($this->table);
             $this->response = $this->dbSelect->dispatch('getById', $this->id);
+            if (empty($this->response)) {
+                $this->setHasError(true);
+                $data['code'] = 404;
+                $data['message'] = 'Not found';
+                $data['error'] = true;
+            }
             $data['data'] = $this->response;
         }
         return $data;

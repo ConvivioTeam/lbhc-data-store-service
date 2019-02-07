@@ -91,6 +91,7 @@ $app->register(Rapide\LaravelQueueKafka\LumenQueueKafkaServiceProvider::class);
  // CQRS service actions.
  $app->register(App\Providers\CQRSServiceProvider::class);
 
+// Model provider
  $app->register(App\Providers\ModelServiceProvider::class);
 
 /*

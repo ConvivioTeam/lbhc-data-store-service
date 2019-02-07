@@ -38,6 +38,16 @@ abstract class AbstractDataUtility implements DataUtilityInterface
      */
     protected $response;
 
+    /**
+     * @var bool
+     */
+    protected $hasError = false;
+
+    /**
+     * @var \Exception|null
+     */
+    protected $error;
+
 
     public function __construct(Application $app, $correlationId)
     {
@@ -68,5 +78,30 @@ abstract class AbstractDataUtility implements DataUtilityInterface
             'brokers' => config('queue.connections.kafka.brokers'),
             'consumer_group_id' => config('queue.connections.kafka.consumer_group_id'),
         ];
+    }
+
+    /**
+     * @return bool
+     */
+    public function hasError(): bool
+    {
+        return $this->hasError;
+    }
+
+    /**
+     * @param bool $hasError
+     */
+    public function setHasError(bool $hasError): void
+    {
+        $this->hasError = $hasError;
+        $this->eventJob = $hasError ? 'job.api.error' : 'job.api.data';
+    }
+
+    /**
+     * @param \Exception|null $error
+     */
+    public function setError(?\Exception $error): void
+    {
+        $this->error = $error;
     }
 }
