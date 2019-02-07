@@ -3,10 +3,14 @@
 namespace App\Jobs\Data;
 
 use App\Jobs\Job;
-use Illuminate\Support\Facades\Log;
 use Laravel\Lumen\Application;
 use Rapide\LaravelQueueKafka\Queue\Jobs\KafkaJob;
 
+/**
+ * Queue job to get data from a query. I.e. GET request data handler.
+ *
+ * @package App\Jobs\Data
+ */
 class GetDataJob extends Job
 {
     /**
@@ -48,7 +52,6 @@ class GetDataJob extends Job
             $data,
             $this->job->getJobId()
         ];
-//        Log::debug(print_r($data, true), [__METHOD__]);
         /** @var \App\Component\Utility\DataQuery $dataQuery */
         $dataQuery = $this->app->makeWith('data.query', $params);
         $dataQuery->dispatch();

@@ -4,7 +4,6 @@ namespace App\Component\Utility\Database;
 
 use http\Exception\InvalidArgumentException;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 
 /**
  * Easy way to get data from the database.

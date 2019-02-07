@@ -5,10 +5,13 @@ namespace App\Http\Controllers\Test;
 use App\Component\Utility\Database\DbInsert;
 use App\Component\Utility\Database\DbSelect;
 use App\Http\Controllers\Controller;
-use Exception;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
 
+/**
+ * Class ProviderController
+ *
+ * @package App\Http\Controllers\Test
+ */
 class ProviderController extends Controller
 {
     /**

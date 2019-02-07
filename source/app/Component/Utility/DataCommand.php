@@ -6,9 +6,13 @@ use App\Component\Model\AbstractModel;
 use App\Component\Model\ModelConfigurationException;
 use App\Component\Utility\Database\DbInsert;
 use App\Component\Utility\Database\DbSelect;
-use Illuminate\Support\Facades\Log;
 use Laravel\Lumen\Application;
 
+/**
+ * Class DataCommand
+ *
+ * @package App\Component\Utility
+ */
 class DataCommand extends AbstractDataUtility
 {
     /**
@@ -77,7 +81,6 @@ class DataCommand extends AbstractDataUtility
     {
         parent::__construct($app, $correlationId);
         $this->command = $command;
-//        Log::debug(print_r($this->command, true), [__CLASS__]);
         $this->type = $this->getCommandItem('type');
         $this->setTable($this->type);
         $this->method = $this->getCommandItem('method', 'create');

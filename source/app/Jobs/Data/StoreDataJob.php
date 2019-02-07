@@ -7,7 +7,7 @@ use Laravel\Lumen\Application;
 use Rapide\LaravelQueueKafka\Queue\Jobs\KafkaJob;
 
 /**
- * Class StoreDataJob
+ * Queue job to store data. I.e. POST request data handler.
  *
  * @package App\Jobs\Store
  */

@@ -3,10 +3,14 @@
 namespace App\Component\Utility;
 
 use App\Component\Utility\Database\DbSelect;
-use Illuminate\Support\Facades\Log;
 use InvalidArgumentException;
 use Laravel\Lumen\Application;
 
+/**
+ * Handles data query jobs. E.g. originating from GET requests, needs some sort of db SELECT.
+ *
+ * @package App\Component\Utility
+ */
 class DataQuery extends AbstractDataUtility
 {
 

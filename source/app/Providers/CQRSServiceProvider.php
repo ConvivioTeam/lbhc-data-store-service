@@ -4,9 +4,15 @@ namespace App\Providers;
 
 use App\Component\Utility\DataCommand;
 use App\Component\Utility\DataQuery;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\ServiceProvider;
 
+/**
+ * CQRS service provider class.
+ *
+ * Commands (POST/PUT/DELETE) and queries (GET) should be handled differently.
+ *
+ * @package App\Providers
+ */
 class CQRSServiceProvider extends ServiceProvider
 {
     public function register()

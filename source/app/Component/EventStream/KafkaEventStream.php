@@ -2,7 +2,6 @@
 
 namespace App\Component\EventStream;
 
-use Illuminate\Support\Facades\Log;
 use Rapide\LaravelQueueKafka\Queue\KafkaQueue;
 use RdKafka\Conf;
 use RdKafka\Producer;

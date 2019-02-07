@@ -2,11 +2,14 @@
 
 namespace App\Component\Utility;
 
-
-use Illuminate\Support\Facades\Log;
 use Laravel\Lumen\Application;
 use Rapide\LaravelQueueKafka\Queue\Connectors\KafkaConnector;
 
+/**
+ * Abstract utility class for data handling.
+ *
+ * @package App\Component\Utility
+ */
 abstract class AbstractDataUtility implements DataUtilityInterface
 {
     /**
@@ -60,7 +63,6 @@ abstract class AbstractDataUtility implements DataUtilityInterface
 
     public function produceEvent()
     {
-//        Log::debug(print_r($this->getEventData(), true), [__METHOD__]);
         $this->queue->push($this->eventJob, $this->getEventData(), $this->eventQueueProduce);
     }
 

@@ -2,7 +2,6 @@
 
 namespace App\Component\Model;
 
-use Illuminate\Support\Facades\Log;
 use Laravel\Lumen\Application;
 
 class AbstractModel

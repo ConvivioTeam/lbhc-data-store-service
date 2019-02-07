@@ -3,13 +3,11 @@
 namespace App\Jobs\Data;
 
 use App\Jobs\Job;
-use Illuminate\Support\Facades\Log;
 use Laravel\Lumen\Application;
-use Rapide\LaravelQueueKafka\Exceptions\QueueKafkaException;
 use Rapide\LaravelQueueKafka\Queue\Jobs\KafkaJob;
 
 /**
- * Class UpdateDataJob
+ * Queue job to update data. I.e. PUT request data handler.
  *
  * @package App\Jobs\Store
  */
@@ -59,7 +57,6 @@ class UpdateDataJob extends Job
             $this->job = $job;
             $data = $job->payload()['data'];
             $data['method'] = 'update';
-            // Log::debug(print_r($jobData, true), [__METHOD__]);
             $params = [
                 $data,
                 $this->job->getJobId()
