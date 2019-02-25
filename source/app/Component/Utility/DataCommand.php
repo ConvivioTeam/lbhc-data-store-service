@@ -6,6 +6,7 @@ use App\Component\Model\AbstractModel;
 use App\Component\Model\ModelConfigurationException;
 use App\Component\Utility\Database\DbInsert;
 use App\Component\Utility\Database\DbSelect;
+use Illuminate\Support\Facades\Log;
 use Laravel\Lumen\Application;
 
 /**
@@ -87,6 +88,7 @@ class DataCommand extends AbstractDataUtility
         $this->dbInsert = new DbInsert($this->table);
         $this->id =  $this->method == 'update' ? $this->getCommandItem('id') : $this->correlationId;
         $modelAbstract = "model.{$this->type}";
+        /** @var \App\Component\Model\AbstractModel model */
         $this->model = $this->app->makeWith($modelAbstract);
         $this->validateModel();
     }
@@ -105,7 +107,7 @@ class DataCommand extends AbstractDataUtility
     protected function validateFields($fields)
     {
         try {
-            $this->model->validateFields($fields);
+            $this->model->validateFields($fields, $this->method);
         } catch (ModelConfigurationException $e) {
             $this->setHasError(true);
             $this->setError($e);
