@@ -65,8 +65,7 @@ class UpdateDataJob extends Job
             $dataQuery = $this->app->makeWith('data.command', $params);
             $dataQuery->dispatch();
             $this->delete();
-        }
-        catch (\PDOException $e) {
+        } catch (\PDOException $e) {
             $this->delete();
             throw $e;
         }
