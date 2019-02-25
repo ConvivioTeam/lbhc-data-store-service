@@ -24,6 +24,11 @@ class AbstractModel
      */
     protected $requiredFields = [];
 
+    /**
+     * @var array
+     */
+    protected $requiredUpdateFields = [];
+
     protected $missingFields;
 
     /**
@@ -49,23 +54,43 @@ class AbstractModel
     public function validate()
     {
         if (empty($this->validFields)) {
-            throw new ModelConfigurationException(sprintf('Valid fields property not set for %s', get_class($this)));
+            throw new ModelConfigurationException(
+                sprintf(
+                    'Valid fields property not set for %s',
+                    get_class($this)
+                )
+            );
         }
         if (empty($this->requiredFields)) {
-            throw new ModelConfigurationException(sprintf('Required fields property not set for %s', get_class($this)));
+            throw new ModelConfigurationException(
+                sprintf(
+                    'Required fields property not set for %s',
+                    get_class($this)
+                )
+            );
+        }
+        if (empty($this->requiredUpdateFields)) {
+            throw new ModelConfigurationException(
+                sprintf(
+                    'Required update fields property not set for %s',
+                    get_class($this)
+                )
+            );
         }
     }
 
     /**
      * @param array $fields
+     * @param string $action
      *
      * @return void
      *
      * @throws ModelConfigurationException
      */
-    public function validateFields($fields)
+    public function validateFields($fields, $action = 'create')
     {
-        $this->missingFields = array_diff_key($this->requiredFields, $fields);
+        $requiredFields = $action == 'update' ? $this->getRequiredUpdateFields() : $this->getRequiredFields();
+        $this->missingFields = array_diff_key($requiredFields, $fields);
         if (!empty($this->missingFields)) {
             throw new ModelConfigurationException(
                 sprintf(
@@ -90,6 +115,14 @@ class AbstractModel
     public function getRequiredFields(): array
     {
         return $this->requiredFields;
+    }
+
+    /**
+     * @return array
+     */
+    public function getRequiredUpdateFields(): array
+    {
+        return $this->requiredUpdateFields;
     }
 
     /**

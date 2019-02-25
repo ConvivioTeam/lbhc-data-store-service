@@ -15,4 +15,22 @@ class Provider extends AbstractModel
         'updated' => 'updated',
         'flagged' => 'flagged',
     ];
+
+    protected $requiredFields = [
+        'id' => 'id',
+        'name' => 'name',
+        'created' => 'created',
+        'updated' => 'updated',
+        'published' => 'published',
+        'flagged' => 'flagged',
+    ];
+
+
+
+    protected $requiredUpdateFields = [
+        'name' => 'name',
+        'updated' => 'updated',
+        'published' => 'published',
+        'flagged' => 'flagged',
+    ];
 }
