@@ -79,7 +79,10 @@ $app->singleton(
 */
 
 // Kafka event queue service provider
-$app->register(Rapide\LaravelQueueKafka\LumenQueueKafkaServiceProvider::class);
+//$app->register(Rapide\LaravelQueueKafka\LumenQueueKafkaServiceProvider::class);
+
+// Kafka event stream service provider.
+$app->register(App\Providers\EventStreamProvider::class);
 
 // $app->register(App\Providers\AppServiceProvider::class);
 // $app->register(App\Providers\AuthServiceProvider::class);
